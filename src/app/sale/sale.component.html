@@ -1,0 +1,123 @@
+<div class="container">
+    <div class="row">
+        <!-- Order Summary -->
+        <section class="col-5">
+            <!-- Customer -->
+            <div class="bg-light px-4 py-3 text-uppercase fw-bold">
+                Customer Details
+            </div>
+            <div class="px-4">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" name="name" id="name" (change)="customerNameValidation()" [(ngModel)]="customer.name" required>
+                    <span class="text-danger" *ngIf="validation.name === false">customer name must contain atleast 4 letters</span>
+                </div>
+                <div class="form-group">
+                    <label for="contact">Contact Number</label>
+                    <input type="tel" class="form-control" name="contact" id="contact" (change)="customerContactValidation()" [(ngModel)]="customer.contact" required>
+                    <span class="text-danger" *ngIf="validation.contact === false">customer contact must contain 11 digits</span>
+                </div>
+            </div>
+
+            <!-- Order -->
+            <div class="bg-light mt-5 px-4 py-3 text-uppercase fw-bold">
+                Order Summary
+            </div>
+            <div class="d-flex justify-content-center" *ngIf="this.cart.length === 0">
+                No Products yet...
+            </div>
+            <div *ngIf="this.cart.length !== 0">
+                <div class="px-4">
+                    <!-- <ul class="list-unstyled mb-4" *ngIf="(basketTotal$ | async)"> -->
+                    <ul class="list-unstyled" *ngFor="let item of cart">
+                        <li class="d-flex justify-content-between py-2 border-bottom">
+                            <strong class="text-muted"> {{item.category}} ({{item.pid}}) x1 </strong>
+                            <!-- <strong>{{(basketTotal$ | async).total | currency}}</strong> -->
+                            <strong>{{item.price | currency}}</strong>
+                        </li>
+                    </ul>
+                    <ul class="list-unstyled">
+                        <li class="d-flex justify-content-between py-3 border-bottom">
+                            <strong class="text-uppercase">Total</strong>
+                            <!-- <strong>{{(basketTotal$ | async).total | currency}}</strong> -->
+                            <strong>{{totalPrice | currency}}</strong>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mx-4 mb-2 d-flex flex-row-reverse">
+                    <button (click)="confirmOrder()" class="btn btn-success mx-1 text-white">Proceed</button>
+                    <button class="btn btn-danger mx-1 text-white">Cancel</button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Add To Cart -->
+        <section class="col-7">
+            <!-- <div class="form-inline " *ngIf="products "> -->
+            <div class="form-inline my-2 d-flex justify-content-end">
+                <!-- <input type="text " class="form-control mx-1 " style="width: 300px; display: inline; " placeholder="Search " (keyup.enter)="onSearch() " #mysearch> -->
+                <div class="d-flex flex-column">
+                    <input type="text " class="form-control mx-1 pt-1" style="width: 300px; display: inline; " placeholder="Enter Product Id" (keyup.enter)="addToCart()" #mysearch>
+                    <!-- <button (click)="onSearch() " class="btn btn-warning mx-1 text-white">Search</button> -->
+                    <!-- <button (click)="onReset() " class="btn btn-danger ">Reset</button> -->
+                    <!-- <button class="btn btn-danger ">Reset</button> -->
+                    <span *ngIf="showNotFound" class="text-danger fw-bold ms-3">Product Not Found!</span>
+                </div>
+                <button (click)="addToCart()" class="btn btn-warning mx-1 text-white align-self-start">Add to Cart</button>
+            </div>
+            <div class="d-flex justify-content-center" *ngIf="this.cart.length === 0">Cart is Empty...</div>
+            <table class="table" *ngIf="this.cart.length !== 0">
+                <thead>
+                    <tr>
+                        <th class="border-0 bg-light" scope="col">
+                            <div class="p-2 px-3 text-uppercase">Product</div>
+                        </th>
+                        <th scope="col" class="border-0 bg-light">
+                            <div class="py-2 text-uppercase">Color</div>
+                        </th>
+                        <th scope="col" class="border-0 bg-light">
+                            <div class="py-2 text-uppercase">Size</div>
+                        </th>
+                        <th scope="col" class="border-0 bg-light">
+                            <div class="py-2 text-uppercase">Fit</div>
+                        </th>
+                        <th scope="col" class="border-0 bg-light">
+                            <div class="py-2 text-uppercase">Price</div>
+                        </th>
+                        <th scope="col" class="border-0 bg-light">
+                            <div class="py-2 text-uppercase">Remove</div>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let item of cart">
+                        <td scope="row">
+                            <p class="ps-3 align-middle">
+                                {{item.category | titlecase}}
+                            </p>
+                        </td>
+                        <td class="align-middle">
+                            <p>{{item.color | titlecase}}</p>
+                        </td>
+                        <td class="align-middle">
+                            <p>{{item.size | uppercase}}</p>
+                        </td>
+                        <td class="align-middle">
+                            <p>{{item.fit | titlecase}}</p>
+                        </td>
+                        <td class="align-middle">
+                            <p>{{item.price | currency}}</p>
+                        </td>
+                        <td class="align-baseline">
+                            <a class="text-danger mx-3 justify-content-start">
+                                <i (click)="removeFromCart(item)" class="fa fa-trash" style="font-size: 25px; cursor: pointer;"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
